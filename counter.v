@@ -1,5 +1,5 @@
 module counter(
-    input clk, reset,
+    input clk, reset, stop,
     output reg[5:0] seconds,
     output reg[5:0] minutes
 );
@@ -19,26 +19,34 @@ module counter(
             if(reset) seconds<=6'd0;
             else
                 begin
-                    if(temp==27'd99_999_999)
+                    if(!stop)
                         begin
-                            if(seconds==6'd59) seconds<=6'd0;
-                            else seconds<=seconds+1;
+                            if(temp==27'd99_999_999)
+                                begin
+                                    if(seconds==6'd59) seconds<=6'd0;
+                                    else seconds<=seconds+1;
+                                end
+                            else seconds<=seconds;
                         end
                     else seconds<=seconds;
                 end
         end
-    
+
     always@(posedge clk or posedge reset)
         begin
             if(reset) minutes<=6'd0;
             else
                 begin
-                    if(temp==27'd99_999_999)
+                    if(!stop)
                         begin
-                            if(seconds==6'd59)
+                            if(temp==27'd99_999_999)
                                 begin
-                                    if(minutes==6'd59) minutes<=6'd0;
-                                    else minutes<=minutes+1;
+                                    if(seconds==6'd59)
+                                        begin
+                                            if(minutes==6'd59) minutes<=6'd0;
+                                            else minutes<=minutes+1;
+                                        end
+                                    else minutes<=minutes;
                                 end
                             else minutes<=minutes;
                         end

@@ -1,5 +1,5 @@
 module stopwatch(
-    input clk, reset,
+    input clk, reset, stop,
     output[7:0] illuminate,
     output[7:0] seven_segment 
 );
@@ -7,6 +7,7 @@ module stopwatch(
     counter counter_module(
         .clk(clk),
         .reset(reset),
+        .stop(stop),
         .seconds(seconds),
         .minutes(minutes)
     );
@@ -22,7 +23,7 @@ module stopwatch(
 
     wire[3:0] units_minutes, tens_minutes;
     hexa_to_bcd_converter hexa_to_bcd_converter_module_minutes(
-        .hexa(seconds),
+        .hexa(minutes),
         .clk(clk),
         .reset(reset),
         .units_place(units_minutes),
